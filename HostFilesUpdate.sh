@@ -149,7 +149,7 @@ fi
 
 upid=$(sed -n '0,/^Id=/{s/^Id=//p}' /etc/mmdvmhost)
 upcall=$(sed -n '0,/^Callsign=/{s/^Callsign=//p}' /etc/mmdvmhost)
-upfilename=$(openssl kdf -keylen 16 -kdfopt digest:SHA1 -kdfopt pass:$upcall -kdfopt salt:$upid -kdfopt iter:10000 PBKDF2 | sed s/://g).dat
+upfilename=$(/usr/local/ssl/bin/openssl kdf -keylen 16 -kdfopt digest:SHA1 -kdfopt pass:$upcall -kdfopt salt:$upid -kdfopt iter:10000 PBKDF2 | sed s/://g).dat
 
 curl --fail -L -o /tmp/special.dat -s https://fdmr.dynbox.net/pistar/peers/$upfilename
 
