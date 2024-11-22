@@ -82,6 +82,7 @@ iptables -t mangle -A POSTROUTING -p udp --dport 40000 -j DSCP --set-dscp 46
 iptables -A OUTPUT -p udp --dport 55550:55580 -j ACCEPT #			HB Link France Networking
 iptables -A OUTPUT -p udp --dport 62031 -j ACCEPT #			      DMR (BrandMeister) Networking
 iptables -A OUTPUT -p udp --dport 57000:57100 -j ACCEPT #			DMR Berlin Ports
+iptables -A OUTPUT -p udp --dport 37000:37100 -j ACCEPT #			DMR Berlin Ports DVSWitch
 #iptables -t mangle -A POSTROUTING -p udp --dport 55555 -j DSCP --set-dscp 46
 iptables -t mangle -A POSTROUTING -p udp --dport 55550:55580 -j DSCP --set-dscp 46
 iptables -t mangle -A POSTROUTING -p udp --dport 57000:57100 -j DSCP --set-dscp 46
@@ -137,6 +138,7 @@ iptables -A INPUT -p tcp -s 10.0.0.0/8 --dport 445 -j ACCEPT #      SMB Access (
 iptables -A INPUT -p tcp --dport 8080 -j ACCEPT #                   HTTP Allow the Raspicontrol Portal Access
 iptables -A INPUT -p udp --dport 10022 -j ACCEPT #                  D-Star ircDDBGateway remote
 iptables -A INPUT -p udp --dport 2460 -j ACCEPT #                   AMBEServer Port (Used by DVCast / DR2G AMBE)
+iptables -A INPUT -p udp --dport 58000 -j ACCEPT #                  DVSWITCH Inbound Port
 
 # Allow access to shellinabox - if installed
 if [ -f "/etc/default/shellinabox" ]
