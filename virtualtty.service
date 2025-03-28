@@ -1,0 +1,12 @@
+[Unit]
+Description=Virtual TTY-Port Service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/sbin/vtty.service start
+ExecStop=/usr/local/sbin/vtty.service stop
+ExecReload=/usr/local/sbin/vtty.service restart
+
+[Install]
+WantedBy=multi-user.target

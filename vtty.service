@@ -1,0 +1,104 @@
+#!/bin/bash
+#########################################################
+#                                                       #
+#              Virtual-TTY Service Handler              #
+#                                                       #
+#########################################################
+
+# Service Config
+DAEMON=socat
+DAEMON_PATH=/usr/bin/
+CONFIG=/etc/mmdvmhost
+PGREP=/usr/bin/pgrep
+KILL=/bin/kill
+SLEEP=/bin/sleep
+
+# Pre-flight checks...
+#test -x ${DAEMON_PATH}${DAEMON} || exit 0 #(apt update && apt install socat -y)
+
+#test -r $CONFIG || echo "config not found" && exit 0
+
+if [ -x ${DAEMON_PATH}${DAEMON} ]
+then
+	echo "Socat is installed"
+else
+	echo "Socat not installed. Installing..."
+	apt update && apt install socat -y
+fi
+
+if [ -r ${CONFIG} ]
+then
+        echo "Config is readable. Starting..."
+else
+        echo "Config is missing. Exit."
+        exit 0
+fi
+
+
+BCPortTest=$(sed -n '0,/^BCPort=/{s/^BCPort=//p}' $CONFIG)
+
+if [ -z "$BCPortTest" -a "$BCPortTest" != " " ]; then
+        echo "Port is not configured, setting to default..."
+        BCPort=1234
+else
+        BCPort=$BCPortTest
+fi
+
+# socat pty,link=/dev/ttyV1 UDP4-DATAGRAM:255.255.255.255:$BCPort,broadcast
+
+case "$1" in
+        start)
+                if [ `${PGREP} ${DAEMON}` ]; then
+                        echo -e "$DAEMON is already running as PID "`$PGREP $DAEMON`
+                        exit 0;
+                else
+                        # Wait for an IP address
+                       # while ! interface_has_ip; do
+                       #     sleep 5
+                       # done
+                        nice -n -10 ${DAEMON_PATH}${DAEMON} pty,link=/dev/ttyV000 UDP4-DATAGRAM:255.255.255.255:$BCPort,broadcast &
+                        echo -e "$DAEMON started as PID "`$PGREP $DAEMON`
+                        exit 0;
+                fi
+                ;;
+
+        stop)
+                if [ `${PGREP} ${DAEMON}` ]; then
+                        echo -e "Killing $DAEMON PID "`$PGREP $DAEMON`
+                        $KILL `${PGREP} ${DAEMON}`
+                        exit 0;
+                else
+                        echo -e "$DAEMON is not running"
+                        exit 0;
+                fi
+                ;;
+
+        restart)
+                if [ `$PGREP $DAEMON` ]; then
+                        echo -e "Killing $DAEMON PID "`$PGREP $DAEMON`
+                        $KILL `${PGREP} ${DAEMON}`
+                        $SLEEP 3
+                        nice -n -10 ${DAEMON_PATH}${DAEMON} pty,link=/dev/ttyV000 UDP4-DATAGRAM:255.255.255.255:$BCPort,broadcast &
+                        echo -e "$DAEMON re-started as PID "`${PGREP} ${DAEMON}`
+                        exit 0;
+                else
+                        echo -e "$DAEMON is not running"
+                        sleep 5
+                        nice -n -10 ${DAEMON_PATH}${DAEMON} pty,link=/dev/ttyV000 UDP4-DATAGRAM:255.255.255.255:$BCPort,broadcast &
+                        echo -e "$DAEMON re-started as PID "`${PGREP} ${DAEMON}`
+                        exit 0;
+                fi
+                ;;
+
+        status)
+                if [ `${PGREP} ${DAEMON}` ]; then
+                        echo -e "$DAEMON is running as PID "`${PGREP} ${DAEMON}`
+                else
+                        echo -e "$DAEMON is not running"
+                fi
+                ;;
+
+        *)
+                echo $"Usage: $0 {start|stop|restart|status}"
+                exit 0
+esac
