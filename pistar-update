@@ -411,10 +411,10 @@ else
   main_function >> /var/log/pi-star/pi-star_update.log 2>&1
 fi
 
-if [ -x /usr/lib/systemd/system/virtualtty.service ]; then
+if [ -x /lib/systemd/system/virtualtty.service ]; then
  echo "VTTY service installed"
 else
- cp /usr/local/sbin/virtualtty.service /usr/lib/systemd/system/
+ cp /usr/local/sbin/virtualtty.service /lib/systemd/system/
  systemctl daemon-reload
  systemctl enable virtualtty.service
  systemctl start virtualtty.service
