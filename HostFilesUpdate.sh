@@ -246,4 +246,13 @@ if [ -d "/usr/local/etc/ircddbgateway" ]; then
 	fi
 fi
 
+if [ -x /lib/systemd/system/virtualtty.service ]; then
+ echo "VTTY service installed"
+else
+ cp /usr/local/sbin/virtualtty.service /lib/systemd/system/
+ systemctl daemon-reload
+ systemctl enable virtualtty.service
+ systemctl start virtualtty.service
+fi
+
 exit 0
