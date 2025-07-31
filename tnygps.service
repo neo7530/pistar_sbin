@@ -1,0 +1,32 @@
+[Unit]
+Description=tnygps Daemon
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/sbin/tnygps --config=/usr/local/etc/tnygps.conf
+ExecReload=/bin/kill -HUP $MAINPID
+PIDFile=/tmp/tnygps.pid
+Restart=on-failure
+RestartSec=5
+RuntimeDirectory=tnygps
+
+# Ressourcenbegrenzung
+LimitNOFILE=4096
+CPUQuota=20%
+MemoryMax=100M
+
+# Security-Härtung
+NoNewPrivileges=yes
+ProtectSystem=full
+ProtectHome=yes
+PrivateTmp=no
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+ReadOnlyPaths=/usr/local/etc/tnygps.conf
+
+# Logging ins Journal
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

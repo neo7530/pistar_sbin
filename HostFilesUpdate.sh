@@ -255,4 +255,13 @@ else
  systemctl start virtualtty.service
 fi
 
+if [ -x /lib/systemd/system/tnygps.service ]; then
+ echo "Tiny-GPS-Daemon already installed"
+else
+ cp /usr/local/sbin/tnygps.service /lib/systemd/system/
+ cp /usr/local/sbin/tnygps.conf /usr/local/etc/
+ systemctl daemon-reload
+ systemctl enable tnygps.service
+fi
+
 exit 0
