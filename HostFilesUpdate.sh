@@ -260,7 +260,7 @@ if [ -x /lib/systemd/system/tnygps.service ]; then
 else
  cp /usr/local/sbin/tnygps.service /lib/systemd/system/
  cp /usr/local/sbin/tnygps.conf /usr/local/etc/
- chmod 777 /usr/local/sbin/tnygps.conf
+ chmod 777 /usr/local/etc/tnygps.conf
  systemctl daemon-reload
  systemctl enable tnygps.service
 fi
