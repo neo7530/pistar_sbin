@@ -85,6 +85,8 @@ iptables -A OUTPUT -p udp --dport 57000:57300 -j ACCEPT #			DMR Berlin Ports
 iptables -A OUTPUT -p udp --dport 37000:37100 -j ACCEPT #			DMR Berlin Ports DVSWitch
 iptables -A OUTPUT -p udp --dport 1200:1300 -j ACCEPT #                       DMR Berlin Wireless Display UDP
 iptables -A OUTPUT -p tcp --dport 1200:1300 -j ACCEPT #                       DMR Berlin Wireless Display TCP
+iptables -A OUTPUT -p tcp --dport 8080:8090 -j ACCEPT #                       TNYGPS-PORTS
+
 #iptables -t mangle -A POSTROUTING -p udp --dport 55555 -j DSCP --set-dscp 46
 iptables -t mangle -A POSTROUTING -p udp --dport 55550:55580 -j DSCP --set-dscp 46
 iptables -t mangle -A POSTROUTING -p udp --dport 57000:57300 -j DSCP --set-dscp 46
@@ -143,6 +145,8 @@ iptables -A INPUT -p udp --dport 2460 -j ACCEPT #                   AMBEServer P
 iptables -A INPUT -p udp --dport 58000 -j ACCEPT #                  DVSWITCH Inbound Port
 iptables -A INPUT -p udp --dport 1200:1300 -j ACCEPT #              Wireless Display input UDP
 iptables -A INPUT -p tcp --dport 1200:1300 -j ACCEPT #              Wireless Display input TCP
+iptables -A INPUT -p tcp --dport 8080:8090 -j ACCEPT #              TNYGPS INPUT RULES
+
 # Allow access to shellinabox - if installed
 if [ -f "/etc/default/shellinabox" ]
 then
